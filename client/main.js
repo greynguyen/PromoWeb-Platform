@@ -1,22 +1,23 @@
-import { Template } from 'meteor/templating';
-import { ReactiveVar } from 'meteor/reactive-var';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { Router, Route, IndexRoute } from 'react-router';
+import createBrowserHistory from 'history/createBrowserHistory';
 
-import './main.html';
+import App from './components/app';
 
-Template.hello.onCreated(function helloOnCreated() {
-  // counter starts at 0
-  this.counter = new ReactiveVar(0);
-});
+const history = createBrowserHistory()
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
-Template.hello.helpers({
-  counter() {
-    return Template.instance().counter.get();
-  },
-});
+const routes = (
+  <div className="app">
+    <Router history={history}>
+      <MuiThemeProvider>
+        <Route path="/" component={App} />
+      </MuiThemeProvider>
+    </Router>
+  </div>
+)
 
-Template.hello.events({
-  'click button'(event, instance) {
-    // increment the counter when button is clicked
-    instance.counter.set(instance.counter.get() + 1);
-  },
+Meteor.startup(() => {
+  ReactDOM.render(routes, document.querySelector('.container'));
 });
